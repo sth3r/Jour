@@ -1,47 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Botao from './src/components/botao';
+// In App.js in a new project
 
-const Jour = () => {
-  const [contador, setContador] = useState(0);
+import * as React from 'react';
+import { View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './src/screens/Home';
 
-// 1. toda vez que a pagina for atualizada
-  useEffect(()=>{
-    console.log('componente montado');
-  },[]);
-
-// 2. toda vez que o componente for atualizado
-  useEffect(()=>{
-    console.log('fez update no componente');
-  });
-
-// 3.. toda vez que o componente contador for atualizado
-  useEffect(()=>{
-    console.log('fez update no componente contador');
-  },[contador]);
-
-  const contar = () => {
-    setContador(contador + 1);
-  };
-
-  const reset = ()=>{
-    setContador(0);
-  };
-
+function HomeScreen() {
   return (
-  <View>
-    <Text style={styles.texto}>oi</Text>
-    <Text style={styles.texto}>Contador: {contador}</Text>
-    <Botao texto="Contar" onClick={contar}/>
-    <Botao texto="reset" onClick={reset}/>
-  </View>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+    </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  texto:{
-    fontSize:24,
-  },
-});
+const Stack = createNativeStackNavigator();
 
-export default Jour;
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
