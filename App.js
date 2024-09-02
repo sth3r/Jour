@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Botao from './src/components/botao';
 
 const Jour = () => {
+  const [contador, setContador] = useState(0);
+
   const contar = () => {
-    alert('clicou');
+    setContador(contador + 1);
   };
+  const reset = ()=>{
+    setContador(0);
+  };
+
   return (
   <View>
     <Text style={styles.texto}>oi</Text>
-    <Botao texto="Salvar" onClick={contar}/>
+    <Text style={styles.texto}>Contador: {contador}</Text>
+    <Botao texto="Contar" onClick={contar}/>
+    <Botao texto="reset" onClick={reset}/>
   </View>
   );
 };
