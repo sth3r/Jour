@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import Botao from '../components/botao';
 import { Colors } from '../assets/colors';
+// import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
 const SignIn = (props) => {
   const recuperarSenha = () => {
@@ -10,30 +11,43 @@ const SignIn = (props) => {
   const entrar = () => {
     alert('logar no sistema');
   };
+  const cadastrarse = () => {
+    alert('cadastrar-se no sistema');
+  };
 
   return (
-    <View style={styles.container}>
-
-      <View style={styles.divCadastro}>
-        <Text style={styles.criarConta}>criar conta</Text>
-      </View>
-      <View style={styles.divForm}>
-      <View style={styles.linha} />
-        <Image
-          style={styles.image}
-          source={require('../assets/images/pato.jpg')}
-          accessibilityLabel="Imagem de um patinho com um caderno em um ambiente com folhas ao ar"
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View style={styles.divCadastro}>
+          <Text style={styles.criarConta} onPress={cadastrarse}>criar conta</Text>
+        </View>
+        <View style={styles.divForm}>
+        <View style={styles.linha} />
+          <Image
+            style={styles.image}
+            source={require('../assets/images/pato.jpg')}
+            accessibilityLabel="Imagem de um patinho com um caderno em um ambiente com folhas ao ar"
+            />
+          <TextInput style={styles.imput}
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="next"
+            color="colors.darkGrey"
           />
-        <TextInput style={styles.imput} />
-        <TextInput style={styles.imput} />
-        <Text
-          style={styles.esqueceuSenha}
-          onPress={recuperarSenha}>
-            Esqueceu sua senha?</Text>
-        <Botao texto="ENTRAR" onClick={entrar} />
-      </View>
-
-    </View>
+          <TextInput style={styles.imput}
+            // secureTextEntry={showPass}
+            placeholder="Senha"
+            keyboardType="default"
+            returnKeyType="go"
+          />
+          <Text
+            style={styles.esqueceuSenha}
+            onPress={recuperarSenha}>
+              Esqueceu sua senha?</Text>
+          <Botao texto="ENTRAR" onClick={entrar} />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -69,7 +83,7 @@ const styles = StyleSheet.create({
   imput:{
     width: '95%',
     height: 50,
-    borderBottomColor: Colors.roxo,
+    borderBottomColor: Colors.darkGrey,
     borderBottomWidth: 2,
     fontSize: 16,
     paddingLeft: 2,
