@@ -1,25 +1,32 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableHighlight } from 'react-native';
+import { Colors } from '../assets/colors';
 
 const Botao = (props) =>{
     console.log(props);
     return(
       <TouchableHighlight style={styles.button} onPress={()=>props.onClick()}>
-        <Text>{props.texto}</Text>
+        <Text style={styles.texto}>{props.texto}</Text>
       </TouchableHighlight>
     );
 };
 
 const styles = StyleSheet.create({
     texto:{
-      fontSize:24,
+      fontSize:20,
     },
     button:{
+      width: '65%',
+      height: 65,
+      borderRadius: 50,
+      borderColor: Colors.white,
+      borderWidth: 1,
+      justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#ffe51f',
-      padding: 10,
-      margin: 10,
-    }
+      backgroundColor: Colors.roxo,
+      padding: 15,
+      margin: 50,
+    },
   });
 
 export default Botao;
