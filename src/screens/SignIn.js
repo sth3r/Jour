@@ -47,7 +47,7 @@ const SignIn = ({navigation}) => {
         }
       });
     } else{
-      Alert.alert('Erro', 'Algum campo está vazio');
+      Alert.alert('Atenção', 'Algum campo está vazio');
     }
   };
 
