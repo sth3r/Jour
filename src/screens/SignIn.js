@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView} from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import Botao from '../components/botao';
 import { Colors } from '../assets/colors';
 // import app from '@react-native-firebase/app';
@@ -19,27 +19,32 @@ const SignIn = (props) => {
   const entrar = () => {
     console.log(`Email=${email} Senha=${pass}`);
     // alert('logar no sistema');
-    auth()
-    .signInWithEmailAndPassword(email,pass)
-    .then(()=>{
-      alert('Logaste');
-      setEmail('');
-      setPass('');
-    })
-    .catch((e)=>{
-      console.log('SignIn: erro em entrar: ' + e);
-      switch(e.code){
-        case 'auth/user-not-found':
-          alert(e);
-          break;
-        case 'auth/wrong-password':
-          alert(e);
-          break;
-        case 'auth/invalid-email':
-          alert(e);
-          break;
-      }
-    });
+    if(email !== '' && pass !== ''){
+
+      auth()
+      .signInWithEmailAndPassword(email,pass)
+      .then(()=>{
+        alert('Logaste');
+        setEmail('');
+        setPass('');
+      })
+      .catch((e)=>{
+        console.log('SignIn: erro em entrar: ' + e);
+        switch(e.code){
+          case 'auth/user-not-found':
+            Alert.alert('Erro', 'Usuario não cadastrado');
+            break;
+          case 'auth/invalid-credential':
+            Alert.alert('Erro', 'Email ou senha errados');
+            break;
+          case 'auth/too-many-requests':
+            Alert.alert('Erro', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
+            break;
+        }
+      });
+    } else{
+      Alert.alert('Erro', 'Algum campo está vazio');
+    }
   };
   const cadastrarse = () => {
     alert('cadastrar-se no sistema');
