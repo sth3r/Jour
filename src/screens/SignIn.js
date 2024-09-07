@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView} from 'react-native';
 import Botao from '../components/botao';
 import { Colors } from '../assets/colors';
-import app from '@react-native-firebase/app';
+// import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 
 // import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
@@ -18,7 +18,28 @@ const SignIn = (props) => {
   };
   const entrar = () => {
     console.log(`Email=${email} Senha=${pass}`);
-    alert('logar no sistema');
+    // alert('logar no sistema');
+    auth()
+    .signInWithEmailAndPassword(email,pass)
+    .then(()=>{
+      alert('Logaste');
+      setEmail('');
+      setPass('');
+    })
+    .catch((e)=>{
+      console.log('SignIn: erro em entrar: ' + e);
+      switch(e.code){
+        case 'auth/user-not-found':
+          alert(e);
+          break;
+        case 'auth/wrong-password':
+          alert(e);
+          break;
+        case 'auth/invalid-email':
+          alert(e);
+          break;
+      }
+    });
   };
   const cadastrarse = () => {
     alert('cadastrar-se no sistema');
