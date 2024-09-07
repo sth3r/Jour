@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import Botao from '../components/botao';
 import { Colors } from '../assets/colors';
+import app from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
+
 // import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
 const SignIn = (props) => {
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+
+  console.log(auth);
+
   const recuperarSenha = () => {
     alert('abrir modal recuperar senha');
   };
   const entrar = () => {
+    console.log(`Email=${email} Senha=${pass}`);
     alert('logar no sistema');
   };
   const cadastrarse = () => {
@@ -28,17 +37,27 @@ const SignIn = (props) => {
             source={require('../assets/images/pato.jpg')}
             accessibilityLabel="Imagem de um patinho com um caderno em um ambiente com folhas ao ar"
             />
-          <TextInput style={styles.imput}
+          <TextInput 
+            style={styles.imput}
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            color="colors.darkGrey"
+            onChangeText={t=>setEmail(t)}
+            onEndEditing={()=>this.passTextInput.focus()}
+            placeholderTextColor={Colors.darkGrey}
           />
-          <TextInput style={styles.imput}
+          <TextInput
+            style={styles.imput}
+            ref={(ref)=>{
+              this.passTextInput = ref;
+            }}
             // secureTextEntry={showPass}
             placeholder="Senha"
             keyboardType="default"
             returnKeyType="go"
+            onChangeText={t=>setPass(t)}
+            cursorColor={Colors.darkGrey}
+            placeholderTextColor={Colors.darkGrey}
           />
           <Text
             style={styles.esqueceuSenha}
@@ -54,6 +73,9 @@ const SignIn = (props) => {
 export default SignIn;
 
 const styles = StyleSheet.create({
+  placeholder:{
+    color: Colors.darkGrey,
+  },
   container:{
     flex: 1,
     justifyContent: 'center',
@@ -88,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 2,
     paddingBottom: 1,
-    color: Colors.roxo,
+    color: Colors.darkGrey,
   },
   esqueceuSenha:{
     fontSize: 15,
