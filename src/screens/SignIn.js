@@ -5,7 +5,6 @@ import { Colors } from '../assets/colors';
 // import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import { CommonActions } from '@react-navigation/native';
-import Home from './Home';
 
 // import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
@@ -16,8 +15,9 @@ const SignIn = ({navigation}) => {
   console.log(auth);
 
   const recuperarSenha = () => {
-    alert('abrir modal recuperar senha');
+    navigation.navigate('ForgotPassword');
   };
+
   const entrar = () => {
     console.log(`Email=${email} Senha=${pass}`);
     // alert('logar no sistema');
@@ -50,8 +50,14 @@ const SignIn = ({navigation}) => {
       Alert.alert('Erro', 'Algum campo está vazio');
     }
   };
+
   const cadastrarse = () => {
-    alert('cadastrar-se no sistema');
+    navigation.dispatch(
+      CommonActions.reset({
+        index:0,
+        routes: [{name: 'SignUp'}],
+      })
+    );
   };
 
   return (
@@ -81,7 +87,7 @@ const SignIn = ({navigation}) => {
             ref={(ref)=>{
               this.passTextInput = ref;
             }}
-            // secureTextEntry={showPass}
+            secureTextEntry={true}
             placeholder="Senha"
             keyboardType="default"
             returnKeyType="go"
