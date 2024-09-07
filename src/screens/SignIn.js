@@ -4,10 +4,12 @@ import Botao from '../components/botao';
 import { Colors } from '../assets/colors';
 // import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
+import { CommonActions } from '@react-navigation/native';
+import Home from './Home';
 
 // import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
-const SignIn = (props) => {
+const SignIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
 
@@ -20,13 +22,15 @@ const SignIn = (props) => {
     console.log(`Email=${email} Senha=${pass}`);
     // alert('logar no sistema');
     if(email !== '' && pass !== ''){
-
       auth()
       .signInWithEmailAndPassword(email,pass)
       .then(()=>{
-        alert('Logaste');
-        setEmail('');
-        setPass('');
+        navigation.dispatch(
+          CommonActions.reset({
+            index:0,
+            routes: [{name: 'Home'}],
+          })
+        );
       })
       .catch((e)=>{
         console.log('SignIn: erro em entrar: ' + e);
@@ -70,7 +74,7 @@ const SignIn = (props) => {
             returnKeyType="next"
             onChangeText={t=>setEmail(t)}
             onEndEditing={()=>this.passTextInput.focus()}
-            placeholderTextColor={Colors.darkGrey}
+            placeholderTextColor={Colors.roxo}
           />
           <TextInput
             style={styles.imput}
@@ -83,7 +87,7 @@ const SignIn = (props) => {
             returnKeyType="go"
             onChangeText={t=>setPass(t)}
             cursorColor={Colors.darkGrey}
-            placeholderTextColor={Colors.darkGrey}
+            placeholderTextColor={Colors.roxo}
           />
           <Text
             style={styles.esqueceuSenha}
