@@ -68,7 +68,7 @@ const SignIn = ({navigation}) => {
             source={require('../assets/images/pato.jpg')}
             accessibilityLabel="Imagem de um patinho com um caderno em um ambiente com folhas ao ar"
             />
-          <TextInput 
+          <TextInput
             style={styles.imput}
             placeholder="Email"
             keyboardType="email-address"

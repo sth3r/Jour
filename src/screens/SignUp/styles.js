@@ -18,27 +18,27 @@ export const TextInput = styled.TextInput`
     color: ${Colors.darkGrey};
 `;
 
-export const placeholder = styled.placeholder`
-    color: ${Colors.darkGrey},
-`;
+// export const placeholder = styled.placeholder`
+//     color: ${Colors.darkGrey},
+// `;
 
-export const container = styled.View`
-    color: ${Colors.darkGrey},
-`;
+// export const container = styled.View`
+//     color: ${Colors.darkGrey},
+// `;
 
-export const placeholder = styled.placeholder`
-    color: ${Colors.darkGrey},
-`;
+// export const placeholder = styled.placeholder`
+//     color: ${Colors.darkGrey},
+// `;
 
-export const placeholder = styled.placeholder`
-    color: ${Colors.darkGrey},
-`;
+// export const placeholder = styled.placeholder`
+//     color: ${Colors.darkGrey},
+// `;
 
-export const placeholder = styled.placeholder`
-    color: ${Colors.darkGrey},
-`;
+// export const placeholder = styled.placeholder`
+//     color: ${Colors.darkGrey},
+// `;
 
-export const placeholder = styled.placeholder`
-    color: ${Colors.darkGrey},
-`;
+// export const placeholder = styled.placeholder`
+//     color: ${Colors.darkGrey},
+// `;
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
 // import { Body, TextInput } from './styles';
+import React, { useState } from 'react';
 import Botao from '../../components/botao';
 import { Colors } from '../../assets/colors';
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView} from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+// import auth from '@react-native-firebase/auth';
 
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
