@@ -21,43 +21,46 @@ const SignUp = ({navigation}) => {
 
   const cadastrar = async () => {
     if (nome !== '' && email !== '' && pass !== '' && confPass !== ''){
-      auth()
-        .createUserWithEmailAndPassword(email, pass)
-        .then(()=>{
-          let user = auth().currentUser;
-          user
-            .sendEmailVerification()
-            .then(()=>{
-              Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' verificação');
-              navigation.dispatch(
-                CommonActions.reset({
-                  index:0,
-                  routes: [{name: 'SignIn'}],
-                })
-              );
-            })
+      if (pass === confPass){
+        auth()
+          .createUserWithEmailAndPassword(email, pass)
+          .then(()=>{
+            let user = auth().currentUser;
+            user
+              .sendEmailVerification()
+              .then(()=>{
+                Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' verificação');
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index:0,
+                    routes: [{name: 'SignIn'}],
+                  })
+                );
+              })
+            .catch((e)=>{
+              console.log('SignUp: erro em entrar: ' + e);
+            });
+          })
           .catch((e)=>{
-            console.log('SignUp: erro em entrar: ' + e);
+          console.log('SignUp: erro em entrar: ' + e);
+          switch(e.code){
+            case 'auth/invalid-email':
+              Alert.alert('Email mal formatado', 'Use a formatação correta');
+              break;
+            case 'auth/email-already-in-use':
+              Alert.alert('Email invalido', 'esse email pode já estar em uso, se esse email for seu entre em contato para correção');
+              break;
+            case 'auth/too-many-requests':
+              Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
+              break;
+            case 'auth/weak-password':
+              Alert.alert('Senha muito fraca', 'A senha precisa ter pelo menos 6 caracteres');
+              break;
+          }
           });
-
-        })
-        .catch((e)=>{
-        console.log('SignUp: erro em entrar: ' + e);
-        switch(e.code){
-          case 'auth/invalid-email':
-            Alert.alert('Email mal formatado', 'Use a formatação correta');
-            break;
-          case 'auth/email-already-exists':
-            Alert.alert('Email invalido', 'esse email pode já estar em uso, se esse email for seu entre em contato para correção');
-            break;
-          case 'auth/too-many-requests':
-            Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
-            break;
-          case 'auth/invalid-password	':
-            Alert.alert('Senha muito fraca', 'A senha precisa ter pelo menos 6 caracteres');
-            break;
-        }
-        });
+      }else{
+        Alert.alert('Foca aqui!', 'As senhas são diferentes');
+      }
     } else{
       Alert.alert('Erro', 'Campos vazios');
     }
