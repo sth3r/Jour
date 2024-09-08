@@ -1,75 +1,59 @@
 import React, { useState } from 'react';
+// import { Body, TextInput } from './styles';
+import Botao from '../../components/botao';
+import { Colors } from '../../assets/colors';
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
-import Botao from '../components/botao';
-import { Colors } from '../assets/colors';
-// import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import { CommonActions } from '@react-navigation/native';
 
-// import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
-
-const SignIn = ({navigation}) => {
+const SignUp = ({navigation}) => {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [ConfPass, setConfPass] = useState('');
 
-  console.log(auth);
-
-  const recuperarSenha = () => {
-    navigation.navigate('ForgotPassword');
+  const cadastrar = () => {
+    alert('foi');
   };
 
   const entrar = () => {
-    console.log(`Email=${email} Senha=${pass}`);
-    // alert('logar no sistema');
-    if(email !== '' && pass !== ''){
-      auth()
-      .signInWithEmailAndPassword(email,pass)
-      .then(()=>{
-        navigation.dispatch(
-          CommonActions.reset({
-            index:0,
-            routes: [{name: 'Home'}],
-          })
-        );
-      })
-      .catch((e)=>{
-        console.log('SignIn: erro em entrar: ' + e);
-        switch(e.code){
-          case 'auth/user-not-found':
-            Alert.alert('Erro', 'Usuario não cadastrado');
-            break;
-          case 'auth/invalid-credential':
-            Alert.alert('Erro', 'Email ou senha errados');
-            break;
-          case 'auth/too-many-requests':
-            Alert.alert('Erro', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
-            break;
-        }
-      });
-    } else{
-      Alert.alert('Atenção', 'Algum campo está vazio');
-    }
-  };
+    // navigation.navigate('SignIn');
 
-  const cadastrarse = () => {
-    navigation.navigate('SignUp');
+    navigation.dispatch(
+      CommonActions.reset({
+        index:0,
+        routes: [{name: 'SignIn'}],
+      })
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.divCadastro}>
-          <Text style={styles.criarConta} onPress={cadastrarse}>criar conta</Text>
+          <Text style={styles.entrar} onPress={entrar}>entrar</Text>
         </View>
         <View style={styles.divForm}>
         <View style={styles.linha} />
           <Image
             style={styles.image}
-            source={require('../assets/images/pato.jpg')}
+            source={require('../../assets/images/pato.jpg')}
             accessibilityLabel="Imagem de um patinho com um caderno em um ambiente com folhas ao ar"
             />
-          <TextInput 
+          <TextInput
             style={styles.imput}
+            placeholder="Nome Completo"
+            keyboardType="default"
+            returnKeyType="next"
+            onChangeText={t=>setNome(t)}
+            onEndEditing={()=>this.emailTextInput.focus()}
+            placeholderTextColor={Colors.roxo}
+          />
+          <TextInput
+            style={styles.imput}
+            ref={(ref)=>{
+              this.emailTextInput = ref;
+            }}
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
@@ -85,24 +69,35 @@ const SignIn = ({navigation}) => {
             secureTextEntry={true}
             placeholder="Senha"
             keyboardType="default"
-            returnKeyType="send"
+            returnKeyType="next"
             onChangeText={t=>setPass(t)}
             cursorColor={Colors.darkGrey}
             placeholderTextColor={Colors.roxo}
-            onEndEditing={()=>entrar()}
+            onEndEditing={()=>this.confPassTextInput.focus()}
           />
-          <Text
-            style={styles.esqueceuSenha}
-            onPress={recuperarSenha}>
-              Esqueceu sua senha?</Text>
-          <Botao texto="ENTRAR" onClick={entrar} />
+          <TextInput
+            style={styles.imput}
+            ref={(ref)=>{
+              this.confPassTextInput = ref;
+            }}
+            secureTextEntry={true}
+            placeholder="Confirme sua senha"
+            keyboardType="default"
+            returnKeyType="send"
+            onChangeText={t=>setConfPass(t)}
+            cursorColor={Colors.darkGrey}
+            placeholderTextColor={Colors.roxo}
+            onEndEditing={()=>cadastrar()}
+          />
+          <Botao texto="CRIAR CONTA" onClick={cadastrar} />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-export default SignIn;
+export default SignUp;
+
 
 const styles = StyleSheet.create({
   placeholder:{
@@ -159,7 +154,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.roxo,
     borderBottomWidth: 1.5,
   },
-  criarConta:{
+  entrar:{
     fontSize: 20,
     color: Colors.roxo,
     alignSelf: 'flex-end',
