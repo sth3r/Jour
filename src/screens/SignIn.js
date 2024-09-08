@@ -24,6 +24,10 @@ const SignIn = ({navigation}) => {
       auth()
       .signInWithEmailAndPassword(email,pass)
       .then(()=>{
+        if(!auth().currentUser.emailVerified){
+          Alert.alert('Oopsie', 'Antes você precisa verificar seu email para prosseguir');
+          return;
+        }
         navigation.dispatch(
           CommonActions.reset({
             index:0,

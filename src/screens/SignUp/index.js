@@ -24,13 +24,22 @@ const SignUp = ({navigation}) => {
       auth()
         .createUserWithEmailAndPassword(email, pass)
         .then(()=>{
-          Alert.alert('Informação', 'Usuario Cadastrado');
-          navigation.dispatch(
-            CommonActions.reset({
-              index:0,
-              routes: [{name: 'Home'}],
+          let user = auth().currentUser;
+          user
+            .sendEmailVerification()
+            .then(()=>{
+              Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' verificação');
+              navigation.dispatch(
+                CommonActions.reset({
+                  index:0,
+                  routes: [{name: 'SignIn'}],
+                })
+              );
             })
-          );
+          .catch((e)=>{
+            console.log('SignUp: erro em entrar: ' + e);
+          });
+
         })
         .catch((e)=>{
         console.log('SignUp: erro em entrar: ' + e);
