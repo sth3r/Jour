@@ -19,7 +19,6 @@ const SignIn = ({navigation}) => {
   };
 
   const entrar = () => {
-    console.log(`Email=${email} Senha=${pass}`);
     // alert('logar no sistema');
     if(email !== '' && pass !== ''){
       auth()
@@ -35,14 +34,14 @@ const SignIn = ({navigation}) => {
       .catch((e)=>{
         console.log('SignIn: erro em entrar: ' + e);
         switch(e.code){
-          case 'auth/user-not-found':
-            Alert.alert('Erro', 'Usuario não cadastrado');
+          case 'auth/invalid-email':
+            Alert.alert('Email mal formatado', 'Use a formatação correta');
             break;
           case 'auth/invalid-credential':
             Alert.alert('Erro', 'Email ou senha errados');
             break;
           case 'auth/too-many-requests':
-            Alert.alert('Erro', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
+            Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
             break;
         }
       });

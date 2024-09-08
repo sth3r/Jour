@@ -1,19 +1,57 @@
 // import { Body, TextInput } from './styles';
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import Botao from '../../components/botao';
 import { Colors } from '../../assets/colors';
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView} from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-// import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
+import Loading from '../../components/loading';
+import {AuthUserContext, AuthUserProvider} from '../../context/AuthUserProvider';
 
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  const [ConfPass, setConfPass] = useState('');
+  const [confPass, setConfPass] = useState('');
+  // const [loading, setLoading] = useState(false);
+  const {signUp} = useContext(AuthUserContext);
+  const [showPass, setShowPass] = useState(true);
 
-  const cadastrar = () => {
-    alert('foi');
+  // const {theme} = useTheme();
+
+  const cadastrar = async () => {
+    if (nome !== '' && email !== '' && pass !== '' && confPass !== ''){
+      auth()
+        .createUserWithEmailAndPassword(email, pass)
+        .then(()=>{
+          Alert.alert('Informação', 'Usuario Cadastrado');
+          navigation.dispatch(
+            CommonActions.reset({
+              index:0,
+              routes: [{name: 'Home'}],
+            })
+          );
+        })
+        .catch((e)=>{
+        console.log('SignUp: erro em entrar: ' + e);
+        switch(e.code){
+          case 'auth/invalid-email':
+            Alert.alert('Email mal formatado', 'Use a formatação correta');
+            break;
+          case 'auth/email-already-exists':
+            Alert.alert('Email invalido', 'esse email pode já estar em uso, se esse email for seu entre em contato para correção');
+            break;
+          case 'auth/too-many-requests':
+            Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
+            break;
+          case 'auth/invalid-password	':
+            Alert.alert('Senha muito fraca', 'A senha precisa ter pelo menos 6 caracteres');
+            break;
+        }
+        });
+    } else{
+      Alert.alert('Erro', 'Campos vazios');
+    }
   };
 
   const entrar = () => {
@@ -83,7 +121,7 @@ const SignUp = ({navigation}) => {
             secureTextEntry={true}
             placeholder="Confirme sua senha"
             keyboardType="default"
-            returnKeyType="send"
+            // returnKeyType="send"
             onChangeText={t=>setConfPass(t)}
             cursorColor={Colors.darkGrey}
             placeholderTextColor={Colors.roxo}
