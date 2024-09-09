@@ -5,19 +5,19 @@ import { Colors } from '../../assets/colors';
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import Loading from '../../components/loading';
 import {AuthUserContext, AuthUserProvider} from '../../context/AuthUserProvider';
+import  firestore  from '@react-native-firebase/firestore';
+
 
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [confPass, setConfPass] = useState('');
-  // const [loading, setLoading] = useState(false);
   const {signUp} = useContext(AuthUserContext);
   const [showPass, setShowPass] = useState(true);
 
-  // const {theme} = useTheme();
+  console.log(firestore);
 
   const cadastrar = async () => {
     if (nome !== '' && email !== '' && pass !== '' && confPass !== ''){
@@ -25,18 +25,31 @@ const SignUp = ({navigation}) => {
         auth()
           .createUserWithEmailAndPassword(email, pass)
           .then(()=>{
-            let user = auth().currentUser;
-            user
-              .sendEmailVerification()
-              .then(()=>{
-                Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' verificação');
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index:0,
-                    routes: [{name: 'SignIn'}],
-                  })
-                );
-              })
+            let userF = auth().currentUser;
+            let user = {};
+            user.nome = nome;
+            user.email = email;
+            firestore()
+            .collection('users')
+            .doc(userF.uid)
+            .set(user)
+            .then(() => {
+              console.log('User added!');
+              userF
+                .sendEmailVerification()
+                .then(()=>{
+                  Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' para verificação');
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index:0,
+                      routes: [{name: 'SignIn'}],
+                    })
+                  );
+                })
+              .catch((e)=>{
+                console.log('SignUp: erro em entrar: ' + e);
+              });
+            })
             .catch((e)=>{
               console.log('SignUp: erro em entrar: ' + e);
             });

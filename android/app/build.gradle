@@ -85,6 +85,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     signingConfigs {
         debug {
@@ -112,15 +113,13 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     // Import the Firebase BoM
-  implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
 
-  //Add the dependencies for Firebase products you want to use
-  // When using the BoM, don't specify versions in Firebase dependencies
-  implementation("com.google.firebase:firebase-analytics")
-  implementation 'com.google.firebase:firebase-auth-ktx:22.1.2'
-  
-  // Add the dependencies for any other desired Firebase products
-  // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ('com.google.firebase:firebase-auth-ktx:22.1.2')
+    implementation('com.google.firebase:firebase-firestore-ktx:24.8.1')	
+
+    implementation ('androidx.multidex:multidex:2.0.1' )
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
