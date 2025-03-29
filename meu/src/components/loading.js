@@ -8,10 +8,10 @@ export default ({visivel = false}) => {
       <Dialog.Title title="Aguarde..." />
       <Dialog.Loading
         loadingProps={{
-          color:
-            theme.mode === 'light'
-              ? theme.colors.black
-              : theme.colors.loading,
+        //   color:
+        //     theme.mode === 'light'
+        //       ? theme.colors.black
+        //       : theme.colors.loading,
         }}
       />
     </Dialog>

@@ -1,64 +1,103 @@
+// import { Body, TextInput } from './styles';
 import React, {useContext, useState} from 'react';
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
 import Botao from '../../components/botao';
-import {AuthUserContext} from '../../context/AuthUserProvider';
-import styled from 'styled-components/native';
-import {useTheme} from '@rneui/themed';
 import { Colors } from '../../assets/colors';
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, SafeAreaView, Alert} from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import {AuthUserContext, AuthUserProvider} from '../../context/AuthUserProvider';
+import  firestore  from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const Body = styled.SafeAreaView`
-  flex: 1;
-  align-items: center;
-  /* margin: 10px; */
-  margin-top: 10px;
-  background-color: #fff3e8;
-`;
 
-export default ({navigation}) => {
+const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  const [confirPass, setConfirmPass] = useState('');
-  const [showPass, setShowPass] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [confPass, setConfPass] = useState('');
   const {signUp} = useContext(AuthUserContext);
-  const {theme} = useTheme();
+  const [showPass, setShowPass] = useState(true);
+  // console.log(AsyncStorage);
+
+
+  // console.log(firestore);
 
   const cadastrar = async () => {
-    let msgError = '';
-    if (nome !== '' && email !== '' && pass !== '' && confirPass !== '') {
-      if (pass === confirPass) {
-        let user = {};
-        user.nome = nome;
-        user.email = email;
-        setLoading(true);
-        msgError = await signUp(user, pass);
-        if (msgError === 'ok') {
-          setLoading(false);
-          Alert.alert(
-            'Show!',
-            'Foi enviado um email para:\n' +
-              user.email +
-              '\nFaça a verificação.',
-          );
-          navigation.goBack();
-        } else {
-          setLoading(false);
-          Alert.alert('Ops!', msgError);
-        }
-      } else {
-        Alert.alert('Ops!', 'As senhas digitadas são diferentes.');
+    if (nome !== '' && email !== '' && pass !== '' && confPass !== ''){
+      if (pass === confPass){
+        auth()
+          .createUserWithEmailAndPassword(email, pass)
+          .then(()=>{
+            let userF = auth().currentUser;
+            let user = {};
+            user.nome = nome;
+            user.email = email;
+            firestore()
+            .collection('users')
+            .doc(userF.uid)
+            .set(user)
+            .then(() => {
+              console.log('User added!');
+              userF
+                .sendEmailVerification()
+                .then(()=>{
+                  Alert.alert('Confirme seu email', 'Foi enviado um email para: ' + email + ' para verificação');
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index:0,
+                      routes: [{name: 'SignIn'}],
+                    })
+                  );
+                })
+              .catch((e)=>{
+                console.log('SignUp: erro em entrar: ' + e);
+              });
+            })
+            .catch((e)=>{
+              console.log('SignUp: erro em entrar: ' + e);
+            });
+          })
+          .catch((e)=>{
+          console.log('SignUp: erro em entrar: ' + e);
+          switch(e.code){
+            case 'auth/invalid-email':
+              Alert.alert('Email mal formatado', 'Use a formatação correta');
+              break;
+            case 'auth/email-already-in-use':
+              Alert.alert('Email invalido', 'esse email pode já estar em uso, se esse email for seu entre em contato para correção');
+              break;
+            case 'auth/too-many-requests':
+              Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
+              break;
+            case 'auth/weak-password':
+              Alert.alert('Senha muito fraca', 'A senha precisa ter pelo menos 6 caracteres');
+              break;
+          }
+          });
+      }else{
+        Alert.alert('Foca aqui!', 'As senhas são diferentes');
       }
-    } else {
-      Alert.alert('Ops!', 'Por favor, digite todos os campos.');
+    } else{
+      Alert.alert('Erro', 'Campos vazios');
     }
+  };
+
+  const entrar = () => {
+    // navigation.navigate('SignIn');
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index:0,
+        routes: [{name: 'SignIn'}],
+      })
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.divCadastro}>
-          <Text style={styles.entrar} onPress={() => navigation.navigate('SignIn')}>entrar</Text>
+          <Text style={styles.entrar} onPress={entrar}>entrar</Text>
         </View>
         <View style={styles.divForm}>
         <View style={styles.linha} />
@@ -111,7 +150,7 @@ export default ({navigation}) => {
             placeholder="Confirme sua senha"
             keyboardType="default"
             // returnKeyType="send"
-            onChangeText={t=>setConfirmPass(t)}
+            onChangeText={t=>setConfPass(t)}
             cursorColor={Colors.darkGrey}
             placeholderTextColor={Colors.roxo}
             onEndEditing={()=>cadastrar()}
@@ -122,6 +161,8 @@ export default ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+export default SignUp;
 
 const styles = StyleSheet.create({
   placeholder:{

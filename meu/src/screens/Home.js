@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Botao from '../components/botao';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const [contador, setContador] = useState(0);
 
-// 1. toda vez que a pagina for atualizada
-  useEffect(()=>{
-    console.log('componente montado');
-  },[]);
+// // 1. toda vez que a pagina for atualizada
+//   useEffect(()=>{
+//     console.log('componente montado');
+//   },[]);
 
-// 2. toda vez que o componente for atualizado
-  useEffect(()=>{
-    console.log('fez update no componente');
-  });
+// // 2. toda vez que o componente for atualizado
+//   useEffect(()=>{
+//     console.log('fez update no componente');
+//   });
 
-// 3.. toda vez que o componente contador for atualizado
-  useEffect(()=>{
-    console.log('fez update no componente contador');
-  },[contador]);
+// // 3.. toda vez que o componente contador for atualizado
+//   useEffect(()=>{
+//     console.log('fez update no componente contador');
+//   },[contador]);
 
   const contar = () => {
     setContador(contador + 1);

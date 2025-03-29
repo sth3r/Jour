@@ -5,6 +5,8 @@ import { Colors } from '../assets/colors';
 // import app from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import { CommonActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
 // import {useTheme, Input, Icon, Text, Image} from '@rneui/themed';
 
@@ -12,10 +14,37 @@ const SignIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
 
-  console.log(auth);
-
   const recuperarSenha = () => {
     navigation.navigate('ForgotPassword');
+  };
+
+  const storeUserCache = async (value) => {
+    try {
+      value.pass = pass;
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('user', jsonValue);
+      navigation.dispatch(
+        CommonActions.reset({
+          index:0,
+          routes: [{name: 'Home'}],
+        })
+      );
+    } catch (e) {
+      console.log('SignIn: erro em storeUserCache:', e);
+    }
+  };
+
+  const getUser = ()=>{
+    firestore().collection('users').doc(auth().currentUser.uid).get().then((doc) => {
+        if (doc.exists) {
+            storeUserCache(doc.data());
+        } else {
+            // doc.data() will be undefined in this case
+            console.log('No such document!');
+        }
+    }).catch((error) => {
+        console.log('SignIn: erro em GetUser:', error);
+    });
   };
 
   const entrar = () => {
@@ -28,12 +57,7 @@ const SignIn = ({navigation}) => {
           Alert.alert('Oopsie', 'Antes você precisa verificar seu email para prosseguir');
           return;
         }
-        navigation.dispatch(
-          CommonActions.reset({
-            index:0,
-            routes: [{name: 'Home'}],
-          })
-        );
+        getUser();
       })
       .catch((e)=>{
         console.log('SignIn: erro em entrar: ' + e);

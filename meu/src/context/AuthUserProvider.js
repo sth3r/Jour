@@ -1,12 +1,11 @@
-import React, { createContext, useState } from 'react';
+import React, {createContext, useState} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { Alert } from 'react-native';
 
 export const AuthUserContext = createContext({});
 
-export const AuthUserProvider = ({ children }) => {
+export const AuthUserProvider = ({children}) => {
   const [user, setUser] = useState(null); //usuário que está na sessão
 
   /*
@@ -114,30 +113,16 @@ export const AuthUserProvider = ({ children }) => {
   //função utilitária
   function launchServerMessageErro(e) {
     switch (e.code) {
-      case 'auth/wrong-password':
-        Alert.alert('Ops', 'Senha errada');
-        return 'Erro na senha.';
-      case 'auth/user-disabled':
-        Alert.alert('Opsie', 'Esse usuario está desabilitado');
-        break;
-      case 'auth/invalid-email':
-        Alert.alert('Email mal formatado', 'Use a formatação correta');
-        break;
-      case 'auth/email-already-in-use':
-        Alert.alert('Email invalido', 'esse email pode já estar em uso, se esse email for seu entre em contato para correção');
-        break;
-      case 'auth/too-many-requests':
-        Alert.alert('Excesso de tentativas', 'Bloqueamos todas as tentativas de acesso vindas deste aparelho por excesso de tentativas e/ou atividade estranha, tente novamente mais tarde');
-        break;
-      case 'auth/weak-password':
-        Alert.alert('Senha muito fraca', 'A senha precisa ter pelo menos 6 caracteres');
-        break;
       case 'auth/user-not-found':
-        Alert.alert('Oops', 'Usuario não encontrado');
-        break;
-      case 'auth/invalid-credential':
-        Alert.alert('Erro', 'Email ou senha errados');
-        break;
+        return 'Usuário não cadastrado.';
+      case 'auth/wrong-password':
+        return 'Erro na senha.';
+      case 'auth/invalid-email':
+        return 'Email inválido.';
+      case 'auth/user-disabled':
+        return 'Usuário desabilitado.';
+      case 'auth/email-already-in-use':
+        return 'Email em uso. Tente outro email.';
       default:
         return 'Erro desconhecido. Contate o administrador';
     }
